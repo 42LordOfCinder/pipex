@@ -6,7 +6,7 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:06:27 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/30 18:29:27 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/01/31 18:55:45 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,13 @@
 # include <errno.h>
 # include <unistd.h>
 
-int		main(int argc, char **argv);
+int		main(int argc, char **argv, char **env);
 
 // Parsing
-int		ft_open_files(int argc, char **argv, int *infile_fd, int *outfile_fd);
-char	*ft_get_cmd_path(char *str);
-void	ft_check_cmds(int argc, char **argv);
+int		ft_open_files(int argc, char **argv, int *fds);
+char	*ft_get_cmd(char *str);
+char	**ft_get_paths(char **env);
+int		ft_check_cmd(char **paths, char *cmd);
+void	ft_check_cmds(int argc, char **argv, char **env);
 
 #endif
