@@ -6,7 +6,7 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:07:05 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/31 18:57:41 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:42:53 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 void	ft_execute_cmds(int argc, char **argv, int *fds, char **env)
 {
-	(void) env;
+	//char	*cmd[] = {"ls", "-l", NULL};
+
+	//execve("/bin/ls", cmd, env);
 	(void) argc;
 	(void) argv;
 	(void) fds;
+	(void) env;
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	int	*fds;
+	int		*fds;
+	char	**cmds_paths;
 
 	if (argc < 5)
 	{
@@ -32,7 +36,7 @@ int	main(int argc, char **argv, char **env)
 	fds = malloc(sizeof(int) * 2);
 	if (!ft_open_files(argc, argv, fds))
 		return (-1);
-	ft_check_cmds(argc, argv, env);
+	cmds_paths = ft_get_cmds_paths(argc, argv, env);
 	ft_execute_cmds(argc, argv, fds, env);
 	close(fds[0]);
 	close (fds[1]);

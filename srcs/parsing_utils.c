@@ -6,7 +6,7 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 18:29:41 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/31 19:03:27 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:41:36 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**ft_get_paths(char **env)
 	return (NULL);
 }
 
-int	ft_check_cmd(char **paths, char *cmd)
+char	*ft_check_cmd(char **paths, char *cmd)
 {
 	int		i;
 	char	*tmp;
@@ -93,27 +93,24 @@ int	ft_check_cmd(char **paths, char *cmd)
 	{
 		tmp = ft_strjoin(paths[i], cmd);
 		if (access(tmp, X_OK) != -1)
-		{
-			free(tmp);
-			return (1);
-		}
+			return (tmp);
 		if (access(tmp, F_OK) != -1)
 		{
 			free(tmp);
-			return (2);
+			return ("2");
 		}
 		free(tmp);
 		i++;
 	}
-	return (0);
+	return (NULL);
 }
 
-void	ft_check_cmds(int argc, char **argv, char **env)
+char	**ft_get_cmds_paths(int argc, char **argv, char **env)
 {
 	char	**paths;
 	char	*cmd;
 	int		i;
-	int		res;
+	char	*res;
 
 	paths = ft_get_paths(env);
 	i = 1;
@@ -121,13 +118,13 @@ void	ft_check_cmds(int argc, char **argv, char **env)
 	{
 		cmd = ft_get_cmd(argv[i]);
 		res = ft_check_cmd(paths, cmd);
-		if (res == 0)
+		if (res == NULL)
 		{
 			ft_putstr_fd("\033[0;31mPipex: Command not found: ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\033[0m\n", 2);
 		}
-		if (res == 2)
+		else if (ft_strncmp(res, "2", 1) == 0)
 		{
 			ft_putstr_fd("\033[0;31mPipex: Permission denied: ", 2);
 			ft_putstr_fd(cmd, 2);
