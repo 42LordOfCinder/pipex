@@ -6,37 +6,11 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 18:29:41 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/31 19:41:36 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/01 02:58:38 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	ft_open_files(int argc, char **argv, int *fds)
-{
-	int	fd1;
-	int	fd2;
-
-	fd1 = open(argv[1], O_RDONLY);
-	if (fd1 == -1)
-	{
-		ft_putstr_fd("\033[0;31mPipex: ", 2);
-		perror(argv[1]);
-		ft_putstr_fd("\033[0m", 2);
-		return (0);
-	}
-	fd2 = open(argv[argc - 1], O_CREAT, 0644);
-	if (fd2 == -1)
-	{
-		ft_putstr_fd("\033[0;31mPipex: ", 2);
-		perror(argv[argc - 1]);
-		ft_putstr_fd("\033[0m", 2);
-		return (0);
-	}
-	fds[0] = fd1;
-	fds[1] = fd2;
-	return (1);
-}
 
 char	*ft_get_cmd(char *str)
 {
@@ -92,44 +66,59 @@ char	*ft_check_cmd(char **paths, char *cmd)
 	while (paths && paths[i])
 	{
 		tmp = ft_strjoin(paths[i], cmd);
-		if (access(tmp, X_OK) != -1)
-			return (tmp);
-		if (access(tmp, F_OK) != -1)
+		if (access(tmp, X_OK) != -1 || access(cmd, X_OK) != -1)
 		{
+			ft_free_split(paths);
+			return (tmp);
+		}
+		if (access(tmp, F_OK) != -1 || access(cmd, F_OK) != -1)
+		{
+			ft_free_split(paths);
 			free(tmp);
-			return ("2");
+			return ("/ / /");
 		}
 		free(tmp);
 		i++;
 	}
+	ft_free_split(paths);
 	return (NULL);
 }
 
-char	**ft_get_cmds_paths(int argc, char **argv, char **env)
+int	ft_handle_path_errors(char *res, char *cmd)
 {
-	char	**paths;
+	if (res == NULL)
+	{
+		ft_putstr_fd("\033[0;31mPipex: Command not found: ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd("\033[0m\n", 2);
+		return (0);
+	}
+	else if (ft_strncmp(res, "/ / /", 5) == 0)
+	{
+		ft_putstr_fd("\033[0;31mPipex: Permission denied: ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd("\033[0m\n", 2);
+		return (0);
+	}
+	return (1);
+}
+
+t_list	*ft_get_cmds_paths(int argc, char **argv, char **env)
+{
 	char	*cmd;
 	int		i;
 	char	*res;
+	t_list	*cmds;
 
-	paths = ft_get_paths(env);
 	i = 1;
+	cmds = NULL;
 	while (i++ < argc - 2)
 	{
-		cmd = ft_get_cmd(argv[i]);
-		res = ft_check_cmd(paths, cmd);
-		if (res == NULL)
-		{
-			ft_putstr_fd("\033[0;31mPipex: Command not found: ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd("\033[0m\n", 2);
-		}
-		else if (ft_strncmp(res, "2", 1) == 0)
-		{
-			ft_putstr_fd("\033[0;31mPipex: Permission denied: ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd("\033[0m\n", 2);
-		}
+		cmd = ft_get_cmd(ft_strdup(argv[i]));
+		res = ft_check_cmd(ft_get_paths(env), cmd);
+		if (ft_handle_path_errors(res, cmd))
+			ft_lstadd_back(&cmds, ft_lstnew(res));
+		free(cmd);
 	}
-	ft_free_split(paths);
+	return (cmds);
 }
