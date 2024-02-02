@@ -51,7 +51,7 @@ SRCS = ft_atoi.c         \
 	   ft_lstiter.c      \
 	   ft_lstmap.c       \
 	   ft_lstfree.c      \
-	   ft_free_split.c   \
+	   ft_free_tab.c   \
 	   ft_printf/srcs/ft_printf.c            \
 	   ft_printf/srcs/ft_putchar_count.c     \
 	   ft_printf/srcs/ft_putnbr_base_count.c \

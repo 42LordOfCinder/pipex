@@ -3,106 +3,111 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
+/*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/24 15:07:05 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/01 04:44:15 by gmassoni         ###   ########.fr       */
+/*   Created: 2024/02/02 02:50:50 by gmassoni          #+#    #+#             */
+/*   Updated: 2024/02/02 07:00:48 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	ft_open_files(int argc, char **argv, int *fds)
+void	ft_open_files(char *path1, char *path2, int fds[2])
 {
-	int	fd1;
-	int	fd2;
-
-	fd1 = open(argv[1], O_RDONLY);
-	if (fd1 == -1)
+	fds[0] = open(path1, O_RDONLY);
+	if (fds[0] == -1)
 	{
-		ft_putstr_fd("\033[0;31mPipex: ", 2);
-		perror(argv[1]);
-		ft_putstr_fd("\033[0m", 2);
-		return (0);
+		ft_putstr_fd("Pipex: ", 2);
+		perror(path1);
 	}
-	fd2 = open(argv[argc - 1], O_CREAT, 0644);
-	if (fd2 == -1)
+	fds[1] = open(path2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fds[1] == -1)
 	{
-		ft_putstr_fd("\033[0;31mPipex: ", 2);
-		perror(argv[argc - 1]);
-		ft_putstr_fd("\033[0m", 2);
-		return (0);
+		if (fds[0] > 0)
+			close(fds[0]);
+		ft_putstr_fd("Pipex: ", 2);
+		perror(path2);
+		exit(1);
 	}
-	fds[0] = fd1;
-	fds[1] = fd2;
-	return (1);
 }
 
-void	ft_execute_cmd(char *path, char *cmd, char **env)
+void	ft_execute_cmd(char *cmd, char **env)
 {
-	pid_t	child_pid;
-	char	**args;
+	char	*res;
+	char	*cmd_cpy;
 
-	child_pid = fork();
-	if (child_pid == -1)
+	cmd_cpy = ft_strdup(cmd);
+	res = ft_check_cmd(ft_get_paths(env), ft_get_cmd_without_args(cmd));
+	if (res == NULL)
 	{
-		perror("\033[0;31mPipex: ");
-		ft_putstr_fd("\033[0m", 2);
-		return ;
+		ft_putstr_fd("Pipex: Command not found: ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd("\n", 2);
+		free(cmd_cpy);
+		exit(1);
 	}
-	args = ft_split(cmd, ' ');
-	if (child_pid == 0)
-		execve(path, args, env);
+	else if (ft_strncmp(res, "/ / /", 5) == 0)
+	{
+		ft_putstr_fd("Pipex: Permission denied: ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd("\n", 2);
+		free(cmd_cpy);
+		exit(1);
+	}
 	else
-		ft_free_split(args);
+		execve(res, ft_split(cmd_cpy, ' '), env);
 }
 
-void	ft_handle_cmds(t_list *cmds, int *fds, char **argv, char **env)
+void	ft_do_first_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])
 {
-	int	i;
-	int	j;
-	int	pipe_fds[2];
+	close(fds[1]);
+	dup2(fds[0], 0);
+	close(fds[0]);
+	dup2(pipe_fds[1], 1);
+	close(pipe_fds[0]);
+	close(pipe_fds[1]);
+	ft_execute_cmd(argv[2], env);
+}
 
-	i = 2;
-	while (cmds)
-	{
-		pipe(pipe_fds);
-		ft_execute_cmd(cmds->content, argv[i], env);
-		cmds = cmds->next;
-		i++;
-	}
-	j = 0;
-	while (j < i - 2)
-	{
-		wait(NULL);
-		j++;
-	}
-	(void) fds;
+void	ft_do_second_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])
+{
+	pid_t child_pid;
+
+	close(fds[0]);
+	dup2(fds[1], 1);
+	close(fds[1]);
+	dup2(pipe_fds[0], 0);
+	close(pipe_fds[1]);
+	close(pipe_fds[0]);
+	child_pid = fork();
+	if (child_pid == 0)
+		ft_execute_cmd(argv[3], env);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	int		*fds;
-	t_list	*cmds_paths;
+	pid_t	child_pid;
+	int		pipe_fds[2];
+	int		fds[2];
 
-	if (argc < 5)
+	if (argc != 5)
 	{
-		ft_putstr_fd("\033[0;31mPipex: Too few arguments\033[0m\n", 2);
-		return (-1);
+		ft_putstr_fd("Pipex: Expected 4 arguments: file1 cmd1 cmd2 file2\n", 2);
+		return (1);
 	}
-	fds = malloc(sizeof(int) * 2);
-	if (fds == NULL)
-		return (-1);
-	if (!ft_open_files(argc, argv, fds))
+	ft_open_files(argv[1], argv[4], fds);
+	pipe(pipe_fds);
+	child_pid = fork();
+	if (child_pid == 0)
+		ft_do_first_cmd(argv, pipe_fds, env, fds);
+	else
+		ft_do_second_cmd(argv, pipe_fds, env, fds);
+	while (argc > 3)
 	{
-		free(fds);
-		return (-1);
+		wait(NULL);
+		argc--;
 	}
-	cmds_paths = ft_get_cmds_paths(argc, argv, env);
-	ft_handle_cmds(cmds_paths, fds, argv, env);
-	ft_lstfree(&cmds_paths);
 	close(fds[0]);
 	close(fds[1]);
-	free(fds);
 	return (0);
 }

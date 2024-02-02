@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_split.c                                    :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 18:58:50 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/31 18:59:50 by gmassoni         ###   ########.fr       */
+/*   Created: 2024/01/24 15:06:27 by gmassoni          #+#    #+#             */
+/*   Updated: 2024/02/02 02:21:22 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
-void	ft_free_split(char **tab)
-{
-	int	i;
+# include "../libft/libft.h"
+# include <fcntl.h>
+# include <stdio.h>
+# include <errno.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
+int		main(int argc, char **argv, char **env);
+
+#endif

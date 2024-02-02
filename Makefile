@@ -2,16 +2,22 @@ SHELL = bash
 
 NAME = pipex
 
-INCLUDES = includes
+NAME_BONUS = pipex
+
+INCLUDES = include
 
 CC = clang
 
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = srcs/main.c \
-	   srcs/parsing_utils.c
+	   srcs/utils.c
+
+SRCS_BONUS = srcs_bonus/main_bonus.c
 
 OBJS = ${SRCS:.c=.o}
+
+OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 
 # This is a minimal set of ANSI/VT100 color codes
 _END=\x1b[0m
@@ -47,13 +53,20 @@ ${NAME}: ${OBJS}
 	@${CC} ${CFLAGS} $^ -o $@ -L. libft/libft.a
 	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
 
+bonus: ${OBJS_BONUS}
+	@make -s -C libft
+	@echo -e "${_CYAN}Linking${_END} ${_BOLD}${NAME_BONUS} bonus${_END}${_CYAN}...${_END}"
+	@${CC} ${CFLAGS} $^ -o ${NAME_BONUS} -L. libft/libft.a
+	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
+
 %.o: %.c
 	@echo -e "${_YELLOW}Compiling${_END} ${_BOLD}$<${_END}"
 	@${CC} ${CFLAGS} -I ./${INCLUDES} -c $< -o $@
 
 clean:
 	@make -s fclean -C libft
-	@echo -e "${_YELLOW}Cleaning${_END} ${_BOLD}${OBJS}${_END}"
+	@echo -e "${_YELLOW}Cleaning${_END} ${_BOLD}${OBJS} ${OBJS_BONUS}${_END}"
+	@rm -rf ${OBJS_BONUS}
 	@rm -rf ${OBJS}
 	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
 
