@@ -4,7 +4,7 @@ NAME = pipex
 
 NAME_BONUS = pipex
 
-INCLUDES = include
+INCLUDES = includes
 
 CC = clang
 
