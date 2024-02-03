@@ -51,7 +51,7 @@ SRCS = ft_atoi.c         \
 	   ft_lstiter.c      \
 	   ft_lstmap.c       \
 	   ft_lstfree.c      \
-	   ft_free_tab.c   \
+	   ft_free_tab.c     \
 	   ft_printf/srcs/ft_printf.c            \
 	   ft_printf/srcs/ft_putchar_count.c     \
 	   ft_printf/srcs/ft_putnbr_base_count.c \
@@ -66,6 +66,8 @@ _END=\x1b[0m
 _BOLD=\x1b[1m
 _UNDER=\x1b[4m
 _REV=\x1b[7m
+_UP=\033[1A
+_CLEAR=\033[K
 
 # Colors
 _GREY=\x1b[30m
@@ -89,28 +91,29 @@ _IWHITE=\x1b[47m
 
 all: ${NAME}
 
-${NAME}: ${OBJS}
-	@make -C ft_printf
-	@echo -e "${_CYAN}Linking${_END} ${_BOLD}${NAME}${_END}${_CYAN}...${_END}"
+${NAME}: ft_printf ${OBJS}
+	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}libft... ${_GREEN}Done!${_END}]"
+	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}libft...${_END}]"
 	@ar rcs ${NAME} ${OBJS} ft_printf/libftprintf.a
-	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
+	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}libft... ${_GREEN}Done!${_END}]"
+
+ft_printf:
+	@make -s -C ft_printf
+	@echo -e "tmp"
 
 .c.o:
-	@echo -e "${_YELLOW}Compiling${_END} ${_BOLD}$<${_END}"
+	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}libft... ${_YELLOW}$<${_END}]"
 	@${CC} ${CFLAGS} -I ft_printf/include/ -c $< -o $@
 
 clean:
-	@make fclean -C ft_printf
-	@echo -e "${_YELLOW}Cleaning${_END} ${_BOLD}${OBJS}${_END}"
+	@make -s -C ft_printf fclean
 	@rm -f ${OBJS}
-	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
+	@echo -e "[${_RED}CLeaning${_END} ${_BOLD}libft... ${_GREEN}Done!${_END}]"
 
 fclean: clean
-	@echo -e "${_YELLOW}Cleaning${_END} ${_BOLD}${NAME}${_END}"
 	@rm -f ${NAME}
-	@echo -e "${_BOLD}${_GREEN}Done!${_END}"
-
+	@echo -e "${_UP}${_CLEAR}[${_RED}Fully cleaning${_END} ${_BOLD}libft... ${_GREEN}Done!${_END}]"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean ft_printf fclean re

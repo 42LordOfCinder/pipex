@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 03:27:41 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/02 05:55:18 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/03 00:45:25 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**ft_get_paths(char **env)
 	int		j;
 	char	**paths;
 	char	*tmp;
-	
+
 	i = 0;
 	while (env && env[i])
 	{
@@ -71,18 +71,17 @@ char	*ft_check_cmd(char **paths, char *cmd_alone)
 	int		i;
 	char	*tmp;
 
-	i = 0;
+	i = -1;
 	tmp = ft_handle_no_paths(cmd_alone);
 	if (tmp != NULL)
 		return (tmp);
-	while (paths && paths[i])
+	while (paths && paths[++i])
 	{
 		tmp = ft_strjoin(paths[i], cmd_alone);
 		if (access(tmp, X_OK) == 0)
-		{
 			ft_free_tab(paths);
+		if (access(tmp, X_OK) == 0)
 			return (tmp);
-		}
 		if (access(tmp, F_OK) == 0)
 		{
 			ft_free_tab(paths);
@@ -90,7 +89,6 @@ char	*ft_check_cmd(char **paths, char *cmd_alone)
 			return ("/ / /");
 		}
 		free(tmp);
-		i++;
 	}
 	if (paths)
 		ft_free_tab(paths);

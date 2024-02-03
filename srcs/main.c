@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 02:50:50 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/02 07:00:48 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/03 00:40:08 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,27 @@ void	ft_execute_cmd(char *cmd, char **env)
 
 void	ft_do_first_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])
 {
+	close(pipe_fds[0]);
 	close(fds[1]);
 	dup2(fds[0], 0);
-	close(fds[0]);
 	dup2(pipe_fds[1], 1);
-	close(pipe_fds[0]);
+	close(fds[0]);
 	close(pipe_fds[1]);
-	ft_execute_cmd(argv[2], env);
+	if (fds[0] != -1)
+		ft_execute_cmd(argv[2], env);
+	else
+		ft_execute_cmd("true", env);
 }
 
 void	ft_do_second_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])
 {
-	pid_t child_pid;
+	pid_t	child_pid;
 
+	close(pipe_fds[1]);
 	close(fds[0]);
+	dup2(pipe_fds[0], 0);
 	dup2(fds[1], 1);
 	close(fds[1]);
-	dup2(pipe_fds[0], 0);
-	close(pipe_fds[1]);
 	close(pipe_fds[0]);
 	child_pid = fork();
 	if (child_pid == 0)
@@ -102,11 +105,8 @@ int	main(int argc, char **argv, char **env)
 		ft_do_first_cmd(argv, pipe_fds, env, fds);
 	else
 		ft_do_second_cmd(argv, pipe_fds, env, fds);
-	while (argc > 3)
-	{
-		wait(NULL);
-		argc--;
-	}
+	wait(NULL);
+	wait(NULL);
 	close(fds[0]);
 	close(fds[1]);
 	return (0);
