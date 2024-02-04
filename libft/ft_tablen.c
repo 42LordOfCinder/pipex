@@ -1,13 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_tablen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/04 18:10:14 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/04 18:10:26 by gmassoni         ###   ########.fr       */
+/*   Created: 2024/02/04 04:34:24 by gmassoni          #+#    #+#             */
+/*   Updated: 2024/02/04 04:53:51 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "libft.h"
+
+size_t	ft_tablen(char **tab)
+{
+	size_t	len;
+
+	if (!tab)
+		return (0);
+	len = 0;
+	while (tab[len])
+		len++;
+	return (len);
+}

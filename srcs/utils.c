@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 03:27:41 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/03 00:45:25 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:08:29 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,20 @@ char	**ft_get_paths(char **env)
 	return (NULL);
 }
 
-char	*ft_handle_no_paths(char *cmd)
+char	*ft_handle_no_paths(char *cmd, char **paths)
 {
 	if (access(cmd, X_OK) != -1)
+	{
+		if (paths)
+			ft_free_tab(paths);
 		return (cmd);
+	}
 	if (access(cmd, F_OK) != -1)
+	{
+		if (paths)
+			ft_free_tab(paths);
 		return ("/ / /");
+	}
 	return (NULL);
 }
 
@@ -72,7 +80,7 @@ char	*ft_check_cmd(char **paths, char *cmd_alone)
 	char	*tmp;
 
 	i = -1;
-	tmp = ft_handle_no_paths(cmd_alone);
+	tmp = ft_handle_no_paths(cmd_alone, paths);
 	if (tmp != NULL)
 		return (tmp);
 	while (paths && paths[++i])

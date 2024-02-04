@@ -24,6 +24,7 @@ SRCS = ft_atoi.c         \
 	   ft_strlcat.c      \
 	   ft_strlcpy.c      \
 	   ft_strlen.c       \
+	   ft_tablen.c       \
 	   ft_strncmp.c      \
 	   ft_strnstr.c      \
 	   ft_strrchr.c      \
@@ -52,6 +53,9 @@ SRCS = ft_atoi.c         \
 	   ft_lstmap.c       \
 	   ft_lstfree.c      \
 	   ft_free_tab.c     \
+	   ft_tabcpy.c       \
+	   ft_remove_char.c  \
+	   ft_add_element_tab.c \
 	   ft_printf/srcs/ft_printf.c            \
 	   ft_printf/srcs/ft_putchar_count.c     \
 	   ft_printf/srcs/ft_putnbr_base_count.c \

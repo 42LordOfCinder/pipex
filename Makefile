@@ -11,9 +11,11 @@ CC = clang
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = srcs/main.c \
-	   srcs/utils.c
+	   srcs/utils.c \
+	   srcs/parsing.c
 
-SRCS_BONUS = srcs_bonus/main_bonus.c
+SRCS_BONUS = srcs_bonus/main_bonus.c \
+			 srcs_bonus/parsing_bonus.c
 
 OBJS = ${SRCS:.c=.o}
 
@@ -56,12 +58,14 @@ ${NAME}: ${LIB} ${OBJS}
 	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}pipex...${_END}]"
 	@${CC} ${CFLAGS} $^ -o $@ -L. ${LIB}
 	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
+	@make -s -C libft clean
 
 bonus: ${LIB} ${OBJS_BONUS}
 	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
 	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}pipex...${_END}]"
-	@${CC} ${CFLAGS} $^ -o ${NAME_BONUS} -L. ${LIB}
+	@${CC} ${CFLAGS} $^ -o ${NAME} -L. ${LIB}
 	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
+	@make -s -C libft clean
 
 ${LIB}:
 	@make -s -C libft
@@ -72,12 +76,12 @@ ${LIB}:
 	@${CC} ${CFLAGS} -I ./${INCLUDES} -c $< -o $@
 
 clean:
-	@make -s -C libft fclean
 	@rm -rf ${OBJS_BONUS}
 	@rm -rf ${OBJS}
 	@echo -e "[${_RED}Cleaning${_END} ${_BOLD}pipex... ${_GREEN}Done${_END}]"
 
 fclean: clean
+	@make -s -C libft fclean
 	@rm -rf ${NAME}
 	@echo -e "${_UP}${_CLEAR}[${_RED}Fully cleaning${_END} ${_BOLD}pipex... ${_GREEN}Done${_END}]"
 

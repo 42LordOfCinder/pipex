@@ -1,13 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_tabcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/04 18:10:14 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/04 18:10:26 by gmassoni         ###   ########.fr       */
+/*   Created: 2023/10/31 15:08:26 by gmassoni          #+#    #+#             */
+/*   Updated: 2024/02/04 04:55:28 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "libft.h"
+
+void	ft_tabcpy(char **dst, char **src)
+{
+	int	i;
+
+	i = 0;
+	while (dst && src && src[i])
+	{
+		dst[i] = src[i];
+		i++;
+	}
+}

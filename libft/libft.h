@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 14:59:20 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/01 22:10:25 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/04 07:36:57 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);
 size_t	ft_strlen(const char *s);
+size_t	ft_tablen(char **tab);
 void	*ft_memset(void *s, int c, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
@@ -74,4 +75,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	ft_lstfree(t_list **lst);
 char	*get_next_line(int fd);
 void	ft_free_tab(char **tab);
+void	ft_tabcpy(char **dst, char **src);
+char	**ft_add_element_tab(char **tab, char *str);
+char	*ft_remove_char(char *str, int i);
 #endif

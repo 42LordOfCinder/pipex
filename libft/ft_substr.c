@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 17:21:43 by gmassoni          #+#    #+#             */
-/*   Updated: 2023/11/06 19:15:36 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/04 05:57:03 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,22 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	s_len;
-	char	*substr;
-	size_t	i;
+	char			*new;
+	unsigned int	i;
 
-	if (s == NULL)
+	if (start >= ft_strlen(s))
+		len = 0;
+	else if (len > ft_strlen(s + start))
+		len = ft_strlen(s + start);
+	new = malloc(sizeof(char) * (len + 1));
+	if (new == NULL)
 		return (NULL);
-	s_len = ft_strlen(s);
-	i = start;
-	if (start >= s_len)
+	i = 0;
+	while (start + i < ft_strlen(s) && i < len)
 	{
-		substr = malloc(sizeof(char));
+		new[i] = s[start + i];
 		i++;
 	}
-	else if (start < s_len && start + len <= s_len)
-		substr = malloc((len + 1) * sizeof(char));
-	else
-		substr = malloc(((s_len - start + 1)) * sizeof(char));
-	if (substr == NULL)
-		return (NULL);
-	if (start < s_len)
-		while (s[i++] && i - 1 < start + len)
-			substr[i - start - 1] = s[i - 1];
-	substr[i - start - 1] = 0;
-	return (substr);
+	new[i] = '\0';
+	return (new);
 }

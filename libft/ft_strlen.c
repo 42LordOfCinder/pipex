@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 13:26:41 by gmassoni          #+#    #+#             */
-/*   Updated: 2023/10/30 13:56:21 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:37:48 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	while (s[len] != '\0')
+	while (s && s[len] != '\0')
 		len++;
 	return (len);
 }
