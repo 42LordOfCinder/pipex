@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 18:10:14 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/05 03:53:53 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/05 18:41:14 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ int	ft_pipex(int argc, char **argv, char **env, int fds[2])
 	int	status[1024];
 
 	i = 2;
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		i++;
 	while (i < argc - 1)
 	{
 		if (i == argc - 2)
@@ -86,12 +88,9 @@ int	ft_pipex(int argc, char **argv, char **env, int fds[2])
 			pids[i - 2] = ft_pipe_and_fork(argv[i], env, -1, fds);
 		i++;
 	}
-	j = 0;
-	while (j < i - 2)
-	{
+	j = -1;
+	while (j++ < i - 2)
 		waitpid(pids[j], &status[j], 0);
-		j++;
-	}
 	if (WIFEXITED(status[i - 3]))
 		return (WEXITSTATUS(status[i - 3]));
 	return (1);
@@ -114,7 +113,7 @@ int	main(int argc, char **argv, char **env)
 			ft_putstr_fd("Pipex: here_doc: Too few arguments\n", 2);
 			return (1);
 		}
-		ft_handle_here_doc();
+		ft_handle_here_doc(fds, argv[argc - 1], argv[2]);
 	}
 	else
 		ft_open_files(argv[1], argv[argc - 1], fds);
