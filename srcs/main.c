@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 02:50:50 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/04 05:05:03 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/05 02:45:03 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ int	main(int argc, char **argv, char **env)
 		child_pid2 = ft_do_second_cmd(argv, pipe_fds, env, fds);
 	waitpid(child_pid, NULL, 0);
 	waitpid(child_pid2, &status, 0);
-	close(fds[1]);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (1);

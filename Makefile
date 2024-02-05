@@ -14,8 +14,10 @@ SRCS = srcs/main.c \
 	   srcs/utils.c \
 	   srcs/parsing.c
 
-SRCS_BONUS = srcs_bonus/main_bonus.c \
-			 srcs_bonus/parsing_bonus.c
+SRCS_BONUS = srcs_bonus/main_bonus.c  \
+			 srcs_bonus/utils_bonus.c  \
+			 srcs_bonus/parsing_bonus.c \
+			 srcs_bonus/here_doc_bonus.c
 
 OBJS = ${SRCS:.c=.o}
 
