@@ -6,28 +6,47 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 02:30:58 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/05 19:34:09 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/06 03:03:07 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	ft_read_here_doc(char *limiter, int fd)
+int	ft_cmp(char *buffer, char *limiter)
+{
+	int	i;
+
+	i = 0;
+	while (limiter[i])
+	{
+		if (buffer[i] != limiter[i])
+			return (0);
+		i++;
+	}
+	if (buffer[i] == '\n')
+		return (1);
+	return (0);
+}
+
+int	ft_read_here_doc(char *limiter, int fd)
 {
 	char	*str;
 	char	*buffer;
 	char	*tmp;
 
-	close(fd);
 	buffer = NULL;
-	while (1) // write pipe here_doc >
+	while (1)
 	{
+		if (!buffer)
+			ft_putstr_fd("> ", 1);
 		str = get_next_line(0);
-		ft_putstr_fd(buffer, 2);
 		if (str == NULL && buffer == NULL)
 		{
-			ft_putstr_fd("warning machin\n", 2);
-			exit(1);
+			ft_putstr_fd("\nPipex: Warning: here-document delimited", 2);
+			ft_putstr_fd(" by end-of-file (wanted `", 2);
+			ft_putstr_fd(limiter, 2);
+			ft_putstr_fd("')\n", 2);
+			return (0);
 		}
 		tmp = ft_strjoin(buffer, str);
 		if (str)
@@ -35,42 +54,40 @@ void	ft_read_here_doc(char *limiter, int fd)
 		if (buffer)
 			free(buffer);
 		buffer = tmp;
-		if (ft_strchr(buffer, '\n') != NULL)
+		if (buffer[ft_strlen(buffer) - 1] == '\n')
 		{
-			if (ft_strncmp(buffer, limiter, ft_strlen(limiter)) == 0)
+			if (ft_cmp(buffer, limiter))
 			{
 				free(buffer);
-				break ;
+				return (1);
 			}
-			else
-			{
-				ft_putstr_fd(str, 1);
-				free(buffer);
-				buffer = NULL;
-			}
+			write(fd, buffer, ft_strlen(buffer));
+			free(buffer);
+			buffer = NULL;
 		}
 	}
-	exit(0);
 }
 
 void	ft_handle_here_doc(int fds[2], char *outfile, char *limiter)
 {
-	int		pipe_fds[2];
-	pid_t	child_pid;
+	char	*infile;
 
-	pipe(pipe_fds);
-	close(pipe_fds[1]);
-	child_pid = fork();
-	if (child_pid == 0)
-		ft_read_here_doc(limiter, pipe_fds[0]);
-	fds[0] = pipe_fds[0];
-	fds[1] = open(outfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (fds[1] == -1)
+	infile = ".wowthisfileissotemporaryomgimshockedfr";
+	ft_open_files(infile, outfile, fds, 2);
+	if (!ft_read_here_doc(limiter, fds[0]))
 	{
-		if (fds[0] > -1)
-			close(fds[0]);
-		ft_putstr_fd("Pipex: ", 2);
-		perror(outfile);
-		exit(1);
+		close(fds[0]);
+		unlink(infile);
+		fds[0] = -1;
+	}
+	else
+	{
+		close(fds[0]);
+		fds[0] = open(infile, O_RDONLY);
+		if (fds[0] == -1)
+		{
+			ft_putstr_fd("Pipex: ", 2);
+			perror(infile);
+		}
 	}
 }
