@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 02:30:58 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/06 03:03:07 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/06 04:10:45 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,45 @@ int	ft_cmp(char *buffer, char *limiter)
 	return (0);
 }
 
-int	ft_read_here_doc(char *limiter, int fd)
+char	*ft_append_input(char *buffer, char *limiter)
 {
 	char	*str;
-	char	*buffer;
 	char	*tmp;
+
+	str = get_next_line(0, 0);
+	if (str == NULL && buffer == NULL)
+	{
+		ft_putstr_fd("\nPipex: Warning: here-document delimited", 2);
+		ft_putstr_fd(" by end-of-file (wanted `", 2);
+		ft_putstr_fd(limiter, 2);
+		ft_putstr_fd("')\n", 2);
+		return (NULL);
+	}
+	tmp = ft_strjoin(buffer, str);
+	if (str)
+		free(str);
+	if (buffer)
+		free(buffer);
+	return (tmp);
+}
+
+int	ft_read_here_doc(char *limiter, int fd)
+{
+	char	*buffer;
 
 	buffer = NULL;
 	while (1)
 	{
 		if (!buffer)
 			ft_putstr_fd("> ", 1);
-		str = get_next_line(0);
-		if (str == NULL && buffer == NULL)
-		{
-			ft_putstr_fd("\nPipex: Warning: here-document delimited", 2);
-			ft_putstr_fd(" by end-of-file (wanted `", 2);
-			ft_putstr_fd(limiter, 2);
-			ft_putstr_fd("')\n", 2);
+		buffer = ft_append_input(buffer, limiter);
+		if (!buffer)
 			return (0);
-		}
-		tmp = ft_strjoin(buffer, str);
-		if (str)
-			free(str);
-		if (buffer)
-			free(buffer);
-		buffer = tmp;
 		if (buffer[ft_strlen(buffer) - 1] == '\n')
 		{
 			if (ft_cmp(buffer, limiter))
 			{
+				get_next_line(0, 1);
 				free(buffer);
 				return (1);
 			}

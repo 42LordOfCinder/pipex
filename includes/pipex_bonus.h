@@ -6,7 +6,7 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:06:27 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/06 02:56:56 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/06 04:08:33 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char	*ft_handle_no_paths(char *cmd, char **paths);
 char	*ft_check_cmd(char **paths, char *cmd_alone);
 void	ft_execute_cmd(char *cmd, char **env);
 int		ft_cmp(char *buffer, char *limiter);
+char	*ft_append_input(char *buffer, char *limiter);
 int		ft_read_here_doc(char *limiter, int fd);
 void	ft_handle_here_doc(int fds[2], char *outile, char *limiter);
 char	*ft_substr2(char *s, unsigned int start, size_t len);

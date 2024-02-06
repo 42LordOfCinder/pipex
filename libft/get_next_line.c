@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:31:54 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/01/24 17:16:20 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/06 03:43:48 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,17 @@ static int	ft_check_line(char *buffer, char *line)
 	return (0);
 }
 
-char	*get_next_line(int fd)
+char	*ft_handle_read_0(char *buffer, char *line)
+{
+	free(buffer);
+	buffer = NULL;
+	if (line[0] != 0)
+		return (line);
+	free(line);
+	return (NULL);
+}
+
+char	*get_next_line(int fd, int forced)
 {
 	static char	*buffer[1024];
 	char		*line;
@@ -98,16 +108,12 @@ char	*get_next_line(int fd)
 		line = ft_strjoin1(line, buffer[fd]);
 		if (ft_check_line(buffer[fd], line))
 			return (line);
-		chars = read(fd, buffer[fd], BUFFER_SIZE);
+		if (!forced)
+			chars = read(fd, buffer[fd], BUFFER_SIZE);
+		else
+			chars = 0;
 		if (chars <= 0)
-		{
-			free(buffer[fd]);
-			buffer[fd] = NULL;
-			if (line[0] != 0)
-				return (line);
-			free(line);
-			return (NULL);
-		}
+			return (ft_handle_read_0(buffer[fd], line));
 		buffer[fd][chars] = 0;
 	}
 	return (NULL);
