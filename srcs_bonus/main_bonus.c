@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 18:10:14 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/06 04:15:39 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:55:17 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ int	ft_pipe_and_fork(char *cmd, char **env, int position, int fds[2])
 			dup2(pipe_fds[1], 1);
 		close(pipe_fds[1]);
 		close(fds[1]);
-		if (position == 0)
-			if (fds[0] == -1)
-				ft_execute_cmd("/bin/true", env);
+		if (position == 0 && fds[0] == -1)
+			ft_execute_cmd("/bin/true", env);
 		if (position == 0)
 			dup2(fds[0], 0);
-		close(fds[0]);
+		if (fds[0] != -1)
+			close(fds[0]);
 		ft_execute_cmd(cmd, env);
 	}
 	dup2(pipe_fds[0], 0);
