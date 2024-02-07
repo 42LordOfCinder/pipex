@@ -4,7 +4,7 @@ NAME = pipex
 
 NAME_BONUS = pipex
 
-INCLUDES = includes
+INCLUDE = ./includes
 
 CC = clang
 
@@ -23,15 +23,19 @@ OBJS = ${SRCS:.c=.o}
 
 OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 
-LIB = libft/libft.a
+LIBFT_DIR = ./libft
+
+LIBFT = ${LIBFT_DIR}/libft.a
+
+LIBFT_INCLUDE = ${LIBFT_DIR}/include
 
 # This is a minimal set of ANSI/VT100 color codes
 _END=\x1b[0m
 _BOLD=\x1b[1m
 _UNDER=\x1b[4m
 _REV=\x1b[7m
-_UP=\033[1A
-_CLEAR=\033[K
+_UP=\x1b[a
+_CLEAR=\x1b[2K\r
 
 # Colors
 _GREY=\x1b[30m
@@ -55,37 +59,39 @@ _IWHITE=\x1b[47m
 
 all: ${NAME}
 
-${NAME}: ${LIB} ${OBJS}
-	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
-	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}pipex...${_END}]"
-	@${CC} ${CFLAGS} $^ -o $@ -L. ${LIB}
-	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
-	@make -s -C libft clean
+${NAME}: ${LIBFT} ${OBJS}
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@printf "\n ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}...${_PURPLE}${_BOLD} ]${_END} "
+	@${CC} ${CFLAGS} ${OBJS} ${LIBFT} -I${INCLUDE} -I${LIBFT_INCLUDE} -o ${NAME}
+	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
-bonus: ${LIB} ${OBJS_BONUS}
-	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
-	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}pipex...${_END}]"
-	@${CC} ${CFLAGS} $^ -o ${NAME} -L. ${LIB}
-	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}pipex... ${_GREEN}Done!${_END}]"
-	@make -s -C libft clean
+bonus: ${LIBFT} ${OBJS_BONUS}
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@printf "\n ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}...${_PURPLE}${_BOLD} ]${_END} "
+	@${CC} ${CFLAGS} ${OBJS_BONUS} ${LIBFT} -I${INCLUDE} -I${LIBFT_INCLUDE} -o ${NAME}
+	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
-${LIB}:
+
+${LIBFT}:
 	@make -s -C libft
-	@echo -e "tmp"
 
 %.o: %.c
-	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}pipex... ${_YELLOW}$<${_END}]"
-	@${CC} ${CFLAGS} -I ./${INCLUDES} -c $< -o $@
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}pipex${_END}... ${_CYAN}$<${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@${CC} ${CFLAGS} -I${INCLUDE} -I${LIBFT_INCLUDE} -c $< -o $@
 
 clean:
+	@make -s -C ${LIBFT_DIR} clean
 	@rm -rf ${OBJS_BONUS}
 	@rm -rf ${OBJS}
-	@echo -e "[${_RED}Cleaning${_END} ${_BOLD}pipex... ${_GREEN}Done${_END}]"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Cleaning        ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
-fclean: clean
-	@make -s -C libft fclean
+fclean:
+	@make -s -C ${LIBFT_DIR} fclean
+	@rm -rf ${OBJS}
+	@rm -rf ${OBJS_BONUS}
 	@rm -rf ${NAME}
-	@echo -e "${_UP}${_CLEAR}[${_RED}Fully cleaning${_END} ${_BOLD}pipex... ${_GREEN}Done${_END}]"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
+
 
 re: fclean all
 

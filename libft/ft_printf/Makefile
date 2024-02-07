@@ -6,7 +6,7 @@ CC = clang
 
 CFLAGS = -Wall -Wextra -Werror
 
-INCLUDE = include
+INCLUDE = ./include
 
 SRCS = srcs/ft_printf.c            \
 	   srcs/ft_putchar_count.c     \
@@ -22,8 +22,8 @@ _END=\x1b[0m
 _BOLD=\x1b[1m
 _UNDER=\x1b[4m
 _REV=\x1b[7m
-_UP=\033[1A
-_CLEAR=\033[K
+_UP=\x1b[A
+_CLEAR=\x1b[2K\r
 
 # Colors
 _GREY=\x1b[30m
@@ -47,27 +47,26 @@ _IWHITE=\x1b[47m
 
 all: ${NAME}
 
-${NAME}: tmp ${OBJS}
-	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}ft_printf... ${_GREEN}Done!${_END}]"
-	@echo -e "[${_PURPLE}Linking${_END} ${_BOLD}ft_printf...${_END}]"
+${NAME}: ${OBJS}
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}ft_printf${_END}    ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@printf "\n ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}ft_printf${_END}...${_PURPLE}${_BOLD} ]${_END} "
 	@ar rcs ${NAME} ${OBJS}
-	@echo -e "${_UP}${_CLEAR}[${_PURPLE}Linking${_END} ${_BOLD}ft_printf... ${_GREEN}Done!${_END}]"
+	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}ft_printf${_END}    ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
 .c.o:
-	@echo -e "${_UP}${_CLEAR}[${_CYAN}Compiling${_END} ${_BOLD}ft_printf... ${_YELLOW}$<${_END}]"
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}ft_printf${_END}...    ${_CYAN}$<${_END}${_YELLOW}${_BOLD} ]${_END}"
 	@${CC} ${CFLAGS} -I ./${INCLUDE} -c $< -o $@
 
 clean:
+	@printf " ${_RED}${_BOLD}[${_END} Cleaning        ${_BOLD}ft_printf${_END}...${_RED}${_BOLD} ]${_END}"
 	@rm -f ${OBJS}
-	@echo -e "[${_RED}Cleaning${_END} ${_BOLD}ft_printf... ${_GREEN}Done!${_END}]"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Cleaning        ${_BOLD}ft_printf${_END}    ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
 fclean: clean
+	@printf "${_UP}${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}ft_printf${_END}...${_RED}${_BOLD} ]${_END}"
 	@rm -f ${NAME}
-	@echo -e "${_UP}${_CLEAR}[${_RED}Fully cleaning${_END} ${_BOLD}ft_printf... ${_GREEN}Done!${_END}]"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}ft_printf${_END}    ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
-tmp:
-	@echo -e "tmp"
+re: fclean all
 
-re: fclean tmp all
-
-PHONY: all tmp clean fclean re
+PHONY: all clean fclean re

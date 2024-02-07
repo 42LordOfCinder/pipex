@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 14:59:20 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/06 03:33:00 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/07 02:13:44 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# include "ft_printf/include/ft_printf.h"
+# include "../ft_printf/include/ft_printf.h"
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>

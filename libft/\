@@ -78,8 +78,8 @@ _END=\x1b[0m
 _BOLD=\x1b[1m
 _UNDER=\x1b[4m
 _REV=\x1b[7m
-_UP=\x1b[A
-_CLEAR=\x1b[2K\r
+_UP=\033[1A
+_CLEAR=\033[K
 
 # Colors
 _GREY=\x1b[30m
@@ -104,31 +104,30 @@ _IWHITE=\x1b[47m
 all: ${NAME}
 
 ${NAME}: ${FT_PRINTF} ${OBJS}
-	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}libft${_END}        ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}libft${_END}    ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
 	@printf "\n ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}libft${_END}...${_PURPLE}${_BOLD} ]${_END} "
 	@ar rcs ${NAME} ${OBJS} ${FT_PRINTF}
-	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}libft${_END}        ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
+	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}libft${_END}    ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
 
 ${FT_PRINTF}:
-	@make -s -C ${FT_PRINTF_DIR}
+	@make -s -C ${_FT_PRINTF_DIR}
 
 .c.o:
-	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}libft${_END}... ${_CYAN}$<${_END}${_YELLOW}${_BOLD} ]${_END}"
+	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}libft${_END}...    ${_CYAN}$<${_END}${_YELLOW}${_BOLD} ]${_END}"
 	@${CC} ${CFLAGS} -I${FT_PRINTF_INCLUDE} -I${INCLUDE} -c $< -o $@
 
 clean:
 	@make -s -C ${FT_PRINTF_DIR} clean
 	@printf " ${_RED}${_BOLD}[${_END} Cleaning        ${_BOLD}libft${_END}...${_RED}${_BOLD} ]${_END}"
 	@rm -f ${OBJS}
-	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Cleaning        ${_BOLD}libft${_END}        ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Cleaning        ${_BOLD}libft${_END}    ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
-fclean:
+fclean: clean
 	@make -s -C ${FT_PRINTF_DIR} fclean
-	@printf " ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}libft${_END}...${_RED}${_BOLD} ]${_END}"
-	@rm -f ${OBJS}
+	@printf "${_UP}${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}libft${_END}...${_RED}${_BOLD} ]${_END}"
 	@rm -f ${NAME}
-	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}libft${_END}        ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
+	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}libft${_END}    ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
 re: fclean all
 

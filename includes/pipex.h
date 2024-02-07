@@ -6,14 +6,14 @@
 /*   By: gmassoni <gmassoni@student.42angoulem      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:06:27 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/04 17:44:01 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/07 02:22:42 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "../libft/libft.h"
+# include "../libft/include/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <errno.h>
