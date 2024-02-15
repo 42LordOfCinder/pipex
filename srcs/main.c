@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 02:50:50 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/05 17:57:48 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/15 04:17:30 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	ft_do_first_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])
 		ft_execute_cmd(argv[2], env);
 	}
 	else
-		ft_execute_cmd("/bin/true", env);
+		ft_execute_cmd("/bin/false", env);
 }
 
 pid_t	ft_do_second_cmd(char **argv, int pipe_fds[2], char **env, int fds[2])

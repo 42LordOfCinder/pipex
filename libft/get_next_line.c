@@ -6,7 +6,7 @@
 /*   By: gmassoni <gauthier.massoni@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:31:54 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/06 03:43:48 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/15 05:05:51 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ static int	ft_check_line(char *buffer, char *line)
 	return (0);
 }
 
-char	*ft_handle_read_0(char *buffer, char *line)
+char	*ft_handle_read_0(char **buffer, char *line, int fd)
 {
-	free(buffer);
-	buffer = NULL;
+	free(buffer[fd]);
+	buffer[fd] = NULL;
 	if (line[0] != 0)
 		return (line);
 	free(line);
@@ -113,7 +113,7 @@ char	*get_next_line(int fd, int forced)
 		else
 			chars = 0;
 		if (chars <= 0)
-			return (ft_handle_read_0(buffer[fd], line));
+			return (ft_handle_read_0(buffer, line, fd));
 		buffer[fd][chars] = 0;
 	}
 	return (NULL);

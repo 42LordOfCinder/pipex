@@ -2,7 +2,7 @@ SHELL = bash
 
 NAME = pipex
 
-NAME_BONUS = pipex
+NAME_BONUS = pipex_bonus
 
 INCLUDE = ./includes
 
@@ -65,10 +65,12 @@ ${NAME}: ${LIBFT} ${OBJS}
 	@${CC} ${CFLAGS} ${OBJS} ${LIBFT} -I${INCLUDE} -I${LIBFT_INCLUDE} -o ${NAME}
 	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
-bonus: ${LIBFT} ${OBJS_BONUS}
+bonus: ${NAME_BONUS}
+
+${NAME_BONUS}: ${LIBFT} ${OBJS_BONUS}
 	@printf "${_CLEAR} ${_YELLOW}${_BOLD}[${_END} Compiling       ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_YELLOW}${_BOLD} ]${_END}"
 	@printf "\n ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}...${_PURPLE}${_BOLD} ]${_END} "
-	@${CC} ${CFLAGS} ${OBJS_BONUS} ${LIBFT} -I${INCLUDE} -I${LIBFT_INCLUDE} -o ${NAME}
+	@${CC} ${CFLAGS} ${OBJS_BONUS} ${LIBFT} -I${INCLUDE} -I${LIBFT_INCLUDE} -o ${NAME_BONUS}
 	@printf "${_CLEAR} ${_PURPLE}${_BOLD}[${_END} Linking         ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_PURPLE}${_BOLD} ]${_END}\n"
 
 
@@ -89,12 +91,14 @@ fclean:
 	@make -s -C ${LIBFT_DIR} fclean
 	@rm -rf ${OBJS}
 	@rm -rf ${OBJS_BONUS}
+	@rm -rf ${NAME_BONUS}
 	@rm -rf ${NAME}
 	@printf "${_CLEAR} ${_RED}${_BOLD}[ ${_END}Fully cleaning  ${_BOLD}pipex${_END}        ${_GREEN}Done!${_END}${_RED}${_BOLD} ]${_END}\n"
 
+rebonus: fclean bonus
 
 re: fclean all
 
 rebonus: fclean bonus
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re
