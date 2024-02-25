@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 19:11:05 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/04 18:06:28 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/25 19:16:39 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ char	**ft_parse_cmd(char *cmd, char *str_to_free)
 	char	**res;
 	int		quotes;
 
+	if (!cmd || !*cmd)
+		return (NULL);
 	quotes = ft_is_in_quotes(cmd, ft_strlen(cmd) - 1);
 	if (quotes == 1)
 	{

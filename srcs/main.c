@@ -6,7 +6,7 @@
 /*   By: gmassoni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 02:50:50 by gmassoni          #+#    #+#             */
-/*   Updated: 2024/02/15 04:17:30 by gmassoni         ###   ########.fr       */
+/*   Updated: 2024/02/25 19:26:58 by gmassoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	ft_execute_cmd(char *cmd, char **env)
 	ft_putstr_fd("Pipex: ", 2);
 	perror(cmd);
 	free(cmd_cpy);
+	free(res);
 	ft_free_tab(cmd_parsed);
 	exit(1);
 }
